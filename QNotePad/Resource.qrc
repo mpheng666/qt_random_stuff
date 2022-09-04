@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/menu_handler">
+        <file>images/close_file.png</file>
+        <file>images/new_file.png</file>
+        <file>images/open_file.png</file>
+        <file>images/save_file.png</file>
+        <file>images/save_file_as.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix1"/>
+</RCC>
