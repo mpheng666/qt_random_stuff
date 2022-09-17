@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(mouse_ui VERSION 0.1 LANGUAGES CXX)
+project(SerialPortTest VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -22,34 +22,34 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(mouse_ui
+    qt_add_executable(SerialPortTest
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET mouse_ui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET SerialPortTest APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(mouse_ui SHARED
+        add_library(SerialPortTest SHARED
             ${PROJECT_SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(mouse_ui
+        add_executable(SerialPortTest
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-#find_package(Qt6 REQUIRED COMPONENTS SerialPort)
-#target_link_libraries(mouse_ui PRIVATE Qt6::SerialPort)
+find_package(Qt6 REQUIRED COMPONENTS SerialPort)
+target_link_libraries(SerialPortTest PRIVATE Qt6::SerialPort)
 
-target_link_libraries(mouse_ui PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(SerialPortTest PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-set_target_properties(mouse_ui PROPERTIES
+set_target_properties(SerialPortTest PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -57,10 +57,10 @@ set_target_properties(mouse_ui PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-install(TARGETS mouse_ui
+install(TARGETS SerialPortTest
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(mouse_ui)
+    qt_finalize_executable(SerialPortTest)
 endif()
