@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     // Adding title to the widget
-    QWidget::setWindowTitle("MicroMouse Serial Port Test");
+    QWidget::setWindowTitle("MicroMouse GUI");
 
     // Ports
     QList<QSerialPortInfo> ports = serial_port_info_.availablePorts();
@@ -25,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
         baud_rates_str.append(QString::number(bd));
     }
     ui->comboBox_baudRate->addItems((baud_rates_str));
+    QPixmap mouse_pix(":/mouse/micromouse_pic1.png");
+    ui->label_mouse_pic->setPixmap(mouse_pix.scaled(ui->label_mouse_pic->width(), ui->label_mouse_pic->height(),Qt::KeepAspectRatio));
+//    ui->tabWidget_application->settab
 }
 
 MainWindow::~MainWindow()
