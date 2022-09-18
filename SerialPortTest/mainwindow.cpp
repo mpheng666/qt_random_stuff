@@ -27,7 +27,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox_baudRate->addItems((baud_rates_str));
     QPixmap mouse_pix(":/mouse/micromouse_pic1.png");
     ui->label_mouse_pic->setPixmap(mouse_pix.scaled(ui->label_mouse_pic->width(), ui->label_mouse_pic->height(),Qt::KeepAspectRatio));
-//    ui->tabWidget_application->settab
+
+    ui->treeWidget_params->expandAll();
+    for(auto i=0; i<(ui->treeWidget_params->columnCount());++i)
+    {
+        ui->treeWidget_params->resizeColumnToContents(i);
+    }
+//    ui->treeWidget_params->SelectColumns(2);
+//    auto editable_col = ui->treeWidget_params->currentColumn();
+//    editable_col->
+
+
+
+
 }
 
 MainWindow::~MainWindow()
