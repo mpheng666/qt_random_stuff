@@ -36,26 +36,46 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_openSerial_clicked()
 {
-    QString port_name = ui->comboBox_serialPort->currentText();
-    serial_port_.setPortName(port_name);
-    serial_port_.open(QIODevice::ReadWrite);
 
-    QString port_status_str;
-
-    if(!serial_port_.isOpen())
+//    qDebug() << "Port state: ";
+    if(serial_port_status_ == serialPortState::PORT_UNOPENED)
     {
-//        ui->lineEdit_portStatus->setTextColor(Qt::red);
-//        ui->lineEdit_portStatus->append("Serial port open error! Please check the connection!");
-        port_status_str = "Port error!";
+        QString port_name = ui->comboBox_serialPort->currentText();
+        QString baud_rate_str = ui->comboBox_baudRate->currentText();
+
+        serial_port_.setPortName(port_name);
+        serial_port_.setBaudRate(baud_rate_str.toInt());
+        serial_port_.open(QIODevice::ReadWrite);
+
+        if(serial_port_.isOpen())
+        {
+            serial_port_status_ = serialPortState::PORT_OPENED;
+            ui->lineEdit_portStatus->setText("Port opened");
+            ui->pushButton_openSerial->setText("Close Port");
+            connect(&serial_port_,SIGNAL(readyRead()),this,SLOT(receiveMessage()));
+        }
+    }
+    else if(serial_port_status_ == serialPortState::PORT_OPENED)
+    {
+        serial_port_.close();
+        if(!serial_port_.isOpen())
+        {
+            serial_port_status_ = serialPortState::PORT_UNOPENED;
+            ui->lineEdit_portStatus->setText("Port closed");
+            ui->pushButton_openSerial->setText("Open Port");
+        }
+    }
+    else if(serial_port_status_ == serialPortState::PORT_ERROR)
+    {
+
     }
     else
     {
-        QString baud_rate_str = ui->comboBox_baudRate->currentText();
-        serial_port_.setBaudRate(baud_rate_str.toInt());
-        port_status_str = "Port opened!";
-        connect(&serial_port_,SIGNAL(readyRead()),this,SLOT(receiveMessage()));
+
     }
-//    ui->lineEdit_portStatus->text(port_status_str);
+
+
+
 }
 
 void MainWindow::receiveMessage()
@@ -63,13 +83,24 @@ void MainWindow::receiveMessage()
     QByteArray dataBA = serial_port_.readAll();
     QString data(dataBA);
     buffer_.append(data);
-//    int index = buffer_.indexOf(code);
     if(buffer_.size()){
        QString message = buffer_;
        ui->textEdit_serialRead->setTextColor(Qt::blue); // Receieved message's color is blue.
        ui->textEdit_serialRead->append(message);
-//       buffer.remove(0,index+codeSize);
     }
     buffer_.clear();
 
 }
+
+void MainWindow::on_pushButton_clearScreen_clicked()
+{
+    ui->textEdit_serialRead->clear();
+}
+
+
+void MainWindow::on_pushButton_baudRate_clicked()
+{
+    QString baud_rate_str = ui->comboBox_baudRate->currentText();
+    serial_port_.setBaudRate(baud_rate_str.toInt());
+}
+
